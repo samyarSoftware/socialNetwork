@@ -1,0 +1,102 @@
+{% extends 'parent/base.html' %}
+{% load static %}
+{% load social_share %}
+{% block title%} post details {%endblock%}
+{% block content %}
+
+    <div class="post">
+        {{ post.description|linebreaks }}
+        {{ post.created }} by <a href="{% url 'social:user_detail' post.author.username %}">{{ post.author.username }}</a>
+
+        <button class="like-button">
+            {% if request.user in post.likes.all %}
+                Unlike
+            {% else %}
+                Like
+            {% endif %}
+        </button>
+
+        <button class="save-post">
+            {% if request.user in post.saved_by.all %}
+                UnSave
+            {% else %}
+                Save
+            {% endif %}
+        </button>
+
+        <span class="likes-count">{{post.likes.count}}</span>
+
+        {% for tag in post.tags.all %}
+            <a href="{% url 'social:post_list_by_tag' tag.slug %}">{{ tag.slug }}</a>
+            {% if not forloop.last %}, {% endif %}
+        {% endfor %}
+        <a href="{% url 'social:comment' post.id %}">کامنت ها</a>
+    </div>
+    <br>
+    {% for post in similar_post %}
+        {{post.description|truncatewords:15}}
+        <br>
+        {{post.created}} by {{post.author}}
+    {% endfor %}
+
+
+    {% post_to_facebook object_or_url "Post to Facebook!" %}
+    {% post_to_twitter "New Song: {{object.title}}. Check it out!" object_or_url "Post to Twitter" %}
+    {% post_to_gplus object_or_url "Post to Google+!" %}
+    {% post_to_linkedin object_or_url %}
+    {% send_email object.title "New Song: {{object.title}}. Check it out!" object_or_url "Share via email" %}
+    {% post_to_reddit "New Song: {{object.title}}" post.get_absolute_url %}
+    {% post_to_telegram "New Song: {{object.title}}" object_or_url %}
+    {% post_to_whatsapp object_or_url "Share via WhatsApp" %}
+    {% save_to_pinterest object_or_url %}
+    {% add_pinterest_script %} // Required for save_to_pinterest. Add to the end of body tag.
+    {% copy_to_clipboard object_or_url "Copy to clipboard!" %}
+    {% add_copy_script %} // Required for copy_to_clipboard. Add to the end of body tag.
+
+
+<script>
+    var likeButton = document.querySelector(".like-button");
+
+    likeButton.addEventListener("click", function(){
+
+    fetch('{% url "social:like_post" %}', {
+        method: "POST",
+        headers: {'Content-Type': 'application/json', 'x-requested-with': 'XMLHttpRequest', 'X-CSRFToken': '{{ csrf_token }}'},
+        body: JSON.stringify({
+            "post_id": '{{ post.id }}'
+        })
+        
+    }).then(function(res){
+        return res.json()
+    }).then(function(data){
+        if(data.liked){
+            likeButton.textContent = 'unlike';
+        } else {
+            likeButton.textContent = 'like';
+        }
+        document.querySelector(".likes-count").textContent = data.likes_count;
+    })
+})
+
+
+var savePost = document.querySelector(".save-post");
+
+savePost.addEventListener("click", function(){
+    fetch('{% url "social:save_post" %}', {
+        method: "POST",
+        headers: {'Content-Type': 'application/json', 'x-requested-with': 'XMLHttpRequest', 'X-CSRFToken': '{{ csrf_token }}'},
+        body: JSON.stringify({
+            'post_id': '{{ post.id }}'
+        })
+    }).then(res => res.json()).then(function(data){
+        if(data.saved){
+            savePost.textContent = 'unsave';
+        } else {
+            savePost.textContent = 'save';
+        }
+    })
+})
+
+</script>
+
+{% endblock %}

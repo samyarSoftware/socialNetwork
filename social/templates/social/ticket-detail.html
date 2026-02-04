@@ -1,0 +1,50 @@
+{% extends 'parent/base.html' %}
+{% load static %}
+{% block title %} ticket detail {%endblock%}
+{% block content %}
+
+    <div class="ticket" data-id="{{ ticket.id }}">
+        <p>{{ ticket.name }}</p><br>
+        <p>{{ ticket.subject }}</p><br>
+        <p>{{ ticket.massage }}</p><br>
+        <p> created at {{ ticket.created }}</p>
+        <p>{{ ticket.email }}</p><br>
+    </div>
+
+    <div class="replys">
+        {% for reply in replys %}
+            {{ reply.text }}
+        {% endfor %}
+    </div>
+    
+    <form method="post" class="reply-form">
+        {% csrf_token %}
+        <input type="text" class="reply" required>
+        <button class="reply-btn">ارسال</button>
+    </form>
+
+    <script>
+        
+        var replyBtn = document.querySelector(".reply-btn");
+        var url = "{% url 'social:ticket_reply' ticket.id %}";
+        replyBtn.addEventListener("click", function(){
+            console.log(url);
+            var reply = document.querySelector(".reply").value;
+
+            if (reply){
+                fetch(url, {
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json', 'x-requested-with': 'XMLHttpRequest', 'X-CSRFToken': '{{ csrf_token }}'},
+                    body: JSON.stringify(
+                        {'reply': reply}
+                    )
+                }).then(function(resp){
+                    resp.text()
+                }).then(function(resp){
+                    document.querySelector(".replys").insertAdjacentHTML("beforeend", html)
+                })
+            }
+            
+        })
+    </script>
+{%endblock%}

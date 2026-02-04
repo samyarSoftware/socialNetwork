@@ -1,0 +1,10 @@
+{% extends 'parent/base.html' %}
+{% block title%} register {%endblock%}
+{% block content %}
+    <h1>ثبت نام</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="ثبت نام">
+    </form>
+{% endblock %}

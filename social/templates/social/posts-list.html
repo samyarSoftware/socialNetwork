@@ -1,0 +1,46 @@
+{% extends 'parent/base.html' %}
+{% block title%} posts list {%endblock%}
+{% block content %}
+
+<div class="posts">
+    {% for post in posts %}
+        {{post.description|linebreaks|truncatewords:20}}
+        Published at {{post.created}} by {{post.author}}
+        <br>
+        {% for tag in post.tag.all %}
+            <a href="{% url 'social:post_list_by_tag' tag.slug %}">{{tag.name}}</a>
+            {% if forloop.last %}, {% endif %}
+        {% endfor %}
+        <a href="{% url 'social:post_detail' post.pk %}">جزییات پست</a>
+        <hr><br>
+    {% endfor %}
+</div>
+<button class="load-more">مشاهده بیشتر</button>
+
+<!-- Load the CDN version first -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        let page = 2;
+        $('.load-more').click(function(){
+            $.ajax({
+                url: "{% if tag %}{% url 'social:post_list_by_tag' tag.slug %}{% else %}{% url 'social:post_list' %}{% endif %}" + "?page=" + page,
+                type: 'GET',
+                dataType: 'html',
+                success: function(data){
+                    if(data.trim().length == 0){
+                        $('.load-more').hide();
+                    } else {
+                        $('.posts').append(data);
+                        page++;
+                        // console.log("Loaded page:", page);
+                    }
+                    // $('.posts').append(data);
+                    // page++;
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'parent/base.html' %}
+{% load thumbnail %}
+{% load static %}
+{% block title %}profile{%endblock%}
+{% block content %}
+
+{% with user=request.user %}
+{% if user.photo %}
+    <a href="{{ user.photo.url }}">
+        <img src="{% thumbnail user.photo 200x0 quality=80 %}">
+    </a>
+{% else %}
+
+        <img src="{% static 'images/images.jpeg' %}" style="width: 200px;">
+{% endif %}
+{% endwith %}
+
+<div class="profile">
+    <table>
+        <th>id</th>
+        <th>مشاهده</th>
+        <th>حذف</th>
+
+        {% for post in page_obj %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td><a href="{{post.get_absolute_url}}">{{post.description|truncatewords:15}}</a></td>
+            <td><a href="{% url 'social:delete_post' post.id %}">حذف</a></td>
+        </tr>
+        {% endfor %}
+
+    </table>
+    {% include "partials/pagination.html" %}
+</div>
+
+
+<a href="{% url 'social:user_edit' %}">ویرایش حساب</a>
+<a href="{% url 'social:logout' %}">خروج از حساب</a>
+
+<!-- <div>
+    <ul>
+        {% for ticket in tickets %}
+            <li><a href="{{ ticket.get_absolute_url }}">{{ ticket.massage }}</a></li>
+        {% endfor %}
+    </ul>
+</div> -->
+
+{%endblock%}

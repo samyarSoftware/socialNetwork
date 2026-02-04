@@ -1,0 +1,11 @@
+{% extends 'parent/base.html' %}
+{% block title %}delete post{%endblock%}
+{% block content %}
+
+<form action="" method="post">
+    {% csrf_token %}
+    <h2>آیا میخواهی این پست را حذف کنی</h2>
+    <input type="submit" value="بله"> 
+</form>
+
+{%endblock%}

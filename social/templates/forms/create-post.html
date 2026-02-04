@@ -1,0 +1,9 @@
+{% extends 'parent/base.html' %}
+{% block title%} posts list {%endblock%}
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_ul }}
+        <input type="submit" value="ساخت پست">
+    </form>
+{% endblock %}

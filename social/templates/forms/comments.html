@@ -1,0 +1,18 @@
+{% extends 'parent/base.html' %}
+{% block title%} comments {%endblock%}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="ارسال">
+    </form>
+    
+    {% if comments %}
+        {% for comment in comments %}
+            {{ comment.body }} <br>
+            نوشته شده توسط{{ comment.author }} در زمان {{ comment.created }} <br>
+        {% endfor %}
+        {% else %}
+            کامنتی برای این پست گذاشته نشده است
+    {% endif %}
+{% endblock %}

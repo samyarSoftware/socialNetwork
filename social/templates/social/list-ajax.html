@@ -1,0 +1,13 @@
+{% for post in posts %}
+<div class="posts-item">
+    {{post.description|linebreaks|truncatewords:20}}
+    Published at {{post.created}} by {{post.author}}
+    <br>
+    {% for tag in post.tag.all %}
+        <a href="{% url 'social:post_list_by_tag' tag.slug %}">{{tag.name}}</a>
+        {% if forloop.last %}, {% endif %}
+    {% endfor %}
+    <a href="{% url 'social:post_detail' post.pk %}">جزییات پست</a>
+    <hr><br>
+</div>
+{% endfor %}

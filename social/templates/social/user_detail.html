@@ -1,0 +1,59 @@
+{% extends 'parent/base.html' %}
+{% load thumbnail %}
+{% load static %}
+{% block title %}user detail{%endblock%}
+{% block content %}
+
+{% if user.photo %}
+    <a href="{{ user.photo.url }}">
+        <img src="{% thumbnail user.photo 200x0 quality=80 %}">
+    </a>
+{% else %}
+        <img src="{% static 'images/images.jpeg' %}" style="width: 200px;">
+{% endif %}
+
+<h2>{{user.get_full_name}}</h2>
+<p>{{user.bio}}</p>
+<p>{{user.job}}</p>
+<p>{{user.date_of_birth}}</p>
+
+<button id="follow-button">
+    {% if request.user in user.followers.all %}
+        UnFollow
+    {% else %}
+        Follow
+    {% endif %}
+</button>
+
+<div>
+    {% for follower in followers_sum %}
+        {{follower}}
+    {% endfor %}
+    <br>
+    {% for following in following_sum %}
+        {{following}}
+    {% endfor %}
+</div>
+
+<script>
+    var followBotton = document.getElementById("follow-button");
+
+    followBotton.addEventListener("click", function(){
+        
+        fetch('{% url "social:follow" %}', {
+            method: 'POST',
+            body: JSON.stringify({
+                user_id: "{{ user.id }}"
+            }),
+            headers: {'Content-Type': 'application/json', 'x-requested-with': 'XMLHttpRequest', 'X-CSRFToken': '{{csrf_token}}'}
+        
+            }).then(res => res.json()).then(function(data){
+                    if(data.follow){
+                        followBotton.textContent = "unFollow";
+                    } else {
+                        followBotton.textContent = "Follow";
+                    }
+            })})
+</script>
+
+{%endblock%}
