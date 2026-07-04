@@ -3,18 +3,18 @@
 A modern social networking platform built with Django that allows users to connect, share posts, interact with others, and manage their profiles. This project was created to practice full-stack web development using Django and its ecosystem.
 
 ### Features 
-🔐 User authentication (Sign up, Login, Logout)
-👤 User profiles
-📝 Create, edit, and delete posts
-❤️ Like and unlike posts
-💬 Comment on posts
-👥 Follow and unfollow users
-🔍 Search for users
-📱 Responsive user interface
-🛡️ Secure authentication and permissions
+🔐 User authentication (Sign up, Login, Logout) <br>
+👤 User profiles <br>
+📝 Create, edit, and delete posts <br>
+❤️ Like and unlike posts <br>
+💬 Comment on posts <br>
+👥 Follow and unfollow users <br>
+🔍 Search for users <br>
+📱 Responsive user interface <br>
+🛡️ Secure authentication and permissions <br>
 ### Tech Stack
-Backend: Django
-Database: PostgreSQL
-Frontend: HTML, CSS, JavaScript
-Template Engine: Django Templates
+Backend: Django <br>
+Database: PostgreSQL <br>
+Frontend: HTML, CSS, JavaScript <br>
+Template Engine: Django Templates <br>
 Authentication: Django Authentication Project Structure
